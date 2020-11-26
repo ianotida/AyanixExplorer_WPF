@@ -39,7 +39,7 @@ namespace AyanixExplorer
 
             Label lblName = new Label();
             lblName.Content = sValue;
-            lblName.Padding = new Thickness(5, 3, 0, 3);
+            lblName.Padding = new Thickness(5, 2, 0, 2);
 
             SPanel.Children.Add(ImgF);
             SPanel.Children.Add(lblName);

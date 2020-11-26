@@ -1,19 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
-using System.Threading.Tasks;
 
 
 namespace AyanixExplorer
@@ -30,8 +19,6 @@ namespace AyanixExplorer
             InitializeComponent();
         }
 
-
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ThisPC = Environment.MachineName;
@@ -39,35 +26,30 @@ namespace AyanixExplorer
             Render_TV1();
         }
 
-
-
-
         private void Render_Files(string sPath)
         {
             lvFiles.Items.Clear();
 
-
             if(sPath != "")
             {
-                DirectoryInfo DirInfo = new DirectoryInfo(sPath);
-                FileInfo[] flInfo = DirInfo.GetFiles();
 
-                foreach(FileInfo fld in flInfo)
+                try
                 {
-                    lvFiles.Items.Add(fld);
+                    DirectoryInfo DirInfo = new DirectoryInfo(sPath);
+                    FileInfo[] flInfo = DirInfo.GetFiles();
+
+                    foreach (FileInfo fld in flInfo)
+                    {
+                        lvFiles.Items.Add(fld);
+                    }
+                }
+                catch(Exception x)
+                {
+                    MessageBox.Show(x.Message, "Error in : " + sPath,MessageBoxButton.OK,MessageBoxImage.Error);
                 }
 
-
-
-
             }
-
-
         }
-
-
-
-
 
 
 
@@ -80,22 +62,20 @@ namespace AyanixExplorer
 
             List<Models.LogicalDrives> LogDrives = SystemWMI.Get_SysDrives(".");
 
+            // FIXED ITEMS
             TreeViewItem TVParent = Controls.Tree_Root("PC", ThisPC, "MYPC", Bitmaps.BI_PC);
-
             TreeViewItem TVInfo = Controls.Tree_Root("PCInfo", "Dashboard", "Dashboard", Bitmaps.BI_Chip);
-
             TreeViewItem TVLocal = Controls.Tree_Root("PCDisk", "Local Drives", "LocalDisk", Bitmaps.BI_Hdd);
             TreeViewItem TVNet = Controls.Tree_Root("PCNet", "Mapped Drives", "NetDrive", Bitmaps.BI_Net);
-
             TreeViewItem TVCPL = Controls.Tree_Root("PCCTL", "Control Panel", "Control", Bitmaps.BI_Config);
 
             TreeViewItem TVNode;
             TreeViewItem TVNode2;
 
 
-
             string sKey = "", sName = "";
 
+            // SYSTEM DRIVES            
             foreach (Models.LogicalDrives Drv in LogDrives)
             {
                 TVNode = new TreeViewItem();
@@ -106,21 +86,11 @@ namespace AyanixExplorer
                 switch (Drv.DriveType)
                 {
                     case 1:
-                    case 2:
-                        TVNode = Controls.Tree_Node(sKey, sName, "FD", Bitmaps.BI_PenDrv);
-                        break;
-                    case 4:
-                        TVNode = Controls.Tree_Node(sKey, sName, "ND", Bitmaps.BI_Net);
-                        break;
-                    case 3:
-                        TVNode = Controls.Tree_Node(sKey, sName, "HD", Bitmaps.BI_Hdd);
-                        break;
-                    case 5:
-                        TVNode = Controls.Tree_Node(sKey, sName, "CD", Bitmaps.BI_CD);
-                        break;
-                    default:
-                        TVNode = Controls.Tree_Node(sKey, sName, "UD", Bitmaps.BI_Hdd);
-                        break;
+                    case 2:     TVNode = Controls.Tree_Node(sKey, sName, "FD", Bitmaps.BI_PenDrv);  break;
+                    case 4:     TVNode = Controls.Tree_Node(sKey, sName, "ND", Bitmaps.BI_Net);     break;
+                    case 3:     TVNode = Controls.Tree_Node(sKey, sName, "HD", Bitmaps.BI_Hdd);     break;
+                    case 5:     TVNode = Controls.Tree_Node(sKey, sName, "CD", Bitmaps.BI_CD);      break;
+                    default:    TVNode = Controls.Tree_Node(sKey, sName, "UD", Bitmaps.BI_Hdd);     break;
                 }
 
                 if (Drv.TotalFree != "")
@@ -156,7 +126,6 @@ namespace AyanixExplorer
             TVParent.Items.Add(TVCPL);
 
             TV.Items.Add(TVParent);
-
         }
 
         

@@ -22,8 +22,6 @@ namespace AyanixExplorer
             ManagementScope Mscope = new ManagementScope("\\\\" + sHost + "\\root\\cimv2", Opt);
             Mscope.Connect();
 
-            //try
-            //{
 
             ObjectQuery OQ1 = new ObjectQuery("SELECT * FROM Win32_LogicalDisk");
             ManagementObjectSearcher ObjSch = new ManagementObjectSearcher(Mscope, OQ1);
@@ -60,8 +58,6 @@ namespace AyanixExplorer
                 LogDrvs.Add(LogDrv);
             }
 
-            //}
-            //catch (Exception) { }
 
             return LogDrvs;
         }
